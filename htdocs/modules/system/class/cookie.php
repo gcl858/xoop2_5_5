@@ -45,7 +45,8 @@ class Cookie
             if (is_array($key))
             {
                 // Grab key/value pair
-                list ($k, $v) = each($key);
+                $k = key($key);
+                $v = current($key);
                
                 // Set string representation
                 $key = $k . '[' . $v . ']';
@@ -95,7 +96,8 @@ class Cookie
         if (is_array($key))
         {
             // Grab key/value pair
-            list ($k, $v) = each($key);
+            $k = key($key);
+            $v = current($key);
            
             // Check for key/value pair and return
             if (isset($_COOKIE[$k][$v])) return true;
@@ -118,7 +120,8 @@ class Cookie
         if (is_array($key))
         {
             // Grab key/value pair
-            list ($k, $v) = each($key);
+            $k = key($key);
+            $v = current($key);
            
             // Check for key/value pair and return
             if (isset($_COOKIE[$k][$v])) return $_COOKIE[$k][$v];
@@ -171,7 +174,8 @@ class Cookie
             if (is_array($key))
             {
                 // Grab key/value pair
-                list ($k, $v) = each($key);
+                $k = key($key);
+                $v = current($key);
                
                 // Set string representation
                 $key = $k . '[' . $v . ']';

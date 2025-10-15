@@ -1,6 +1,6 @@
 <?php
 /**
- * MySQL access
+ * MySQLi database driver
  *
  * You may not change or alter any portion of this comment or credits
  * of supporting developers from this source code or any supporting source code
@@ -13,42 +13,34 @@
  * @license         GNU GPL 2 (http://www.gnu.org/licenses/old-licenses/gpl-2.0.html)
  * @package         kernel
  * @subpackage      database
- * @since           1.0.0
+ * @since           2.6.0
  * @author          Kazumi Ono <onokazu@xoops.org>
- * @version         $Id: mysqldatabase.php 8066 2011-11-06 05:09:33Z beckmi $
+ * @author          Taiwen Jiang <phppp@users.sourceforge.net>
+ * @version         $Id: mysqlidatabase.php 1 2012-07-10 11:12:13Z kris $
  */
 defined('XOOPS_ROOT_PATH') or die('Restricted access');
-
-/**
- *
- * @package kernel
- * @subpackage database
- * @author Kazumi Ono <onokazu@xoops.org>
- * @copyright copyright (c) 2000-2003 XOOPS.org
- */
 
 /**
  * base class
  */
 include_once XOOPS_ROOT_PATH . '/class/database/database.php';
-// xoops_load( 'xoopsdatabase' );
+
 /**
  * connection to a mysql database
  *
- * @abstract
- * @author Kazumi Ono <onokazu@xoops.org>
- * @copyright copyright (c) 2000-2003 XOOPS.org
  * @package kernel
  * @subpackage database
+ * @author Kazumi Ono <onokazu@xoops.org>
+ * @copyright copyright (c) 2000-2003 XOOPS.org
  */
-class XoopsMySQLDatabase extends XoopsDatabase
+class XoopsMysqliDatabase extends XoopsDatabase
 {
     /**
      * Database connection
      *
      * @var resource
      */
-    var $conn;
+    public $conn;
 
     /**
      * connect to the database
@@ -60,29 +52,29 @@ class XoopsMySQLDatabase extends XoopsDatabase
     {
         static $db_charset_set;
 
-        if (!extension_loaded('mysql')) {
-            trigger_error('notrace:mysql extension not loaded', E_USER_ERROR);
+        if (!extension_loaded('mysqli')) {
+            trigger_error('notrace:mysqli extension not loaded', E_USER_ERROR);
             return false;
         }
 
         $this->allowWebChanges = ($_SERVER['REQUEST_METHOD'] != 'GET');
 
+        $host = XOOPS_DB_HOST;
+        $user = XOOPS_DB_USER;
+        $pass = XOOPS_DB_PASS;
+        $db_name = XOOPS_DB_NAME;
+
         if (XOOPS_DB_PCONNECT == 1) {
-            $this->conn = @mysql_pconnect(XOOPS_DB_HOST, XOOPS_DB_USER, XOOPS_DB_PASS);
-        } else {
-            $this->conn = @mysql_connect(XOOPS_DB_HOST, XOOPS_DB_USER, XOOPS_DB_PASS);
+            $host = "p:" . $host;
         }
+
+        $this->conn = mysqli_connect($host, $user, $pass, $db_name);
 
         if (!$this->conn) {
             $this->logger->addQuery('', $this->error(), $this->errno());
             return false;
         }
-        if ($selectdb != false) {
-            if (!mysql_select_db(XOOPS_DB_NAME)) {
-                $this->logger->addQuery('', $this->error(), $this->errno());
-                return false;
-            }
-        }
+
         if (!isset($db_charset_set) && defined('XOOPS_DB_CHARSET') && XOOPS_DB_CHARSET) {
             $this->queryF("SET NAMES '" . XOOPS_DB_CHARSET . "'");
         }
@@ -113,7 +105,7 @@ class XoopsMySQLDatabase extends XoopsDatabase
      */
     function fetchRow($result)
     {
-        return @mysql_fetch_row($result);
+        return @mysqli_fetch_row($result);
     }
 
     /**
@@ -123,7 +115,7 @@ class XoopsMySQLDatabase extends XoopsDatabase
      */
     function fetchArray($result)
     {
-        return @mysql_fetch_assoc($result);
+        return @mysqli_fetch_assoc($result);
     }
 
     /**
@@ -133,7 +125,7 @@ class XoopsMySQLDatabase extends XoopsDatabase
      */
     function fetchBoth($result)
     {
-        return @mysql_fetch_array($result, MYSQL_BOTH);
+        return @mysqli_fetch_array($result, MYSQLI_BOTH);
     }
 
     /**
@@ -144,7 +136,7 @@ class XoopsMySQLDatabase extends XoopsDatabase
      */
     function fetchObject($result)
     {
-        return @mysql_fetch_object($result);
+        return @mysqli_fetch_object($result);
     }
 
     /**
@@ -154,7 +146,7 @@ class XoopsMySQLDatabase extends XoopsDatabase
      */
     function getInsertId()
     {
-        return mysql_insert_id($this->conn);
+        return mysqli_insert_id($this->conn);
     }
 
     /**
@@ -165,7 +157,7 @@ class XoopsMySQLDatabase extends XoopsDatabase
      */
     function getRowsNum($result)
     {
-        return @mysql_num_rows($result);
+        return @mysqli_num_rows($result);
     }
 
     /**
@@ -175,7 +167,7 @@ class XoopsMySQLDatabase extends XoopsDatabase
      */
     function getAffectedRows()
     {
-        return mysql_affected_rows($this->conn);
+        return mysqli_affected_rows($this->conn);
     }
 
     /**
@@ -183,7 +175,7 @@ class XoopsMySQLDatabase extends XoopsDatabase
      */
     function close()
     {
-        mysql_close($this->conn);
+        mysqli_close($this->conn);
     }
 
     /**
@@ -194,7 +186,7 @@ class XoopsMySQLDatabase extends XoopsDatabase
      */
     function freeRecordSet($result)
     {
-        return mysql_free_result($result);
+        return mysqli_free_result($result);
     }
 
     /**
@@ -204,7 +196,7 @@ class XoopsMySQLDatabase extends XoopsDatabase
      */
     function error()
     {
-        return @mysql_error();
+        return @mysqli_error($this->conn);
     }
 
     /**
@@ -214,7 +206,7 @@ class XoopsMySQLDatabase extends XoopsDatabase
      */
     function errno()
     {
-        return @mysql_errno();
+        return @mysqli_errno($this->conn);
     }
 
     /**
@@ -233,7 +225,7 @@ class XoopsMySQLDatabase extends XoopsDatabase
      */
     function quote($string)
     {
-        return "'" . str_replace("\\\"", '"', str_replace("\\&quot;", '&quot;', mysql_real_escape_string($string, $this->conn))) . "'";
+        return "'" . mysqli_real_escape_string($this->conn, $string) . "'";
     }
 
     /**
@@ -254,7 +246,7 @@ class XoopsMySQLDatabase extends XoopsDatabase
             $sql = $sql . ' LIMIT ' . (int) $start . ', ' . (int) $limit;
         }
         $this->logger->startTime('query_time');
-        $result = mysql_query($sql, $this->conn);
+        $result = mysqli_query($this->conn, $sql);
         $this->logger->stopTime('query_time');
         $query_time = $this->logger->dumpTime('query_time', true);
         if ($result) {
@@ -315,7 +307,8 @@ class XoopsMySQLDatabase extends XoopsDatabase
      */
     function getFieldName($result, $offset)
     {
-        return mysql_field_name($result, $offset);
+        $field_info = mysqli_fetch_field_direct($result, $offset);
+        return $field_info->name;
     }
 
     /**
@@ -327,7 +320,8 @@ class XoopsMySQLDatabase extends XoopsDatabase
      */
     function getFieldType($result, $offset)
     {
-        return mysql_field_type($result, $offset);
+        $field_info = mysqli_fetch_field_direct($result, $offset);
+        return $field_info->type;
     }
 
     /**
@@ -338,7 +332,7 @@ class XoopsMySQLDatabase extends XoopsDatabase
      */
     function getFieldsNum($result)
     {
-        return mysql_num_fields($result);
+        return mysqli_num_fields($result);
     }
 }
 
@@ -350,7 +344,7 @@ class XoopsMySQLDatabase extends XoopsDatabase
  * @package kernel
  * @subpackage database
  */
-class XoopsMySQLDatabaseSafe extends XoopsMySQLDatabase
+class XoopsMysqliDatabaseSafe extends XoopsMysqliDatabase
 {
     /**
      * perform a query on the database
@@ -378,7 +372,7 @@ class XoopsMySQLDatabaseSafe extends XoopsMySQLDatabase
  * @package kernel
  * @subpackage database
  */
-class XoopsMySQLDatabaseProxy extends XoopsMySQLDatabase
+class XoopsMysqliDatabaseProxy extends XoopsMysqliDatabase
 {
     /**
      * perform a query on the database
@@ -401,5 +395,3 @@ class XoopsMySQLDatabaseProxy extends XoopsMySQLDatabase
         return $this->queryF($sql, $limit, $start);
     }
 }
-
-?>

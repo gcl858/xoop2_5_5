@@ -16,7 +16,7 @@
 
 // Database
 // Choose the database to be used
-define("XOOPS_DB_TYPE", "mysql");
+define("XOOPS_DB_TYPE", "mysqli");
 
 // Set the database charset if applicable
 if (defined("XOOPS_DB_CHARSET")) die('Restricted Access');

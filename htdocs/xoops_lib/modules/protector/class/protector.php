@@ -468,8 +468,8 @@ function dblayertrap_init( $force_override = false )
 	}
 
 	if( ! empty( $this->_dblayertrap_doubtfuls ) || $force_override ) {
-		@define( 'XOOPS_DB_ALTERNATIVE' , 'ProtectorMysqlDatabase' ) ;
-		require_once dirname(dirname(__FILE__)).'/class/ProtectorMysqlDatabase.class.php' ;
+		@define( 'XOOPS_DB_ALTERNATIVE' , 'ProtectorMysqliDatabase' ) ;
+		require_once dirname(dirname(__FILE__)).'/class/ProtectorMysqliDatabase.class.php' ;
 	}
 }
 

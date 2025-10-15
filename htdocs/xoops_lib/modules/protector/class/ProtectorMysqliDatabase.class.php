@@ -8,7 +8,7 @@ if( file_exists( XOOPS_ROOT_PATH.'/class/database/drivers/'.XOOPS_DB_TYPE.'/data
 
 require_once XOOPS_ROOT_PATH.'/class/database/database.php' ;
 
-class ProtectorMySQLDatabase extends XoopsMySQLDatabaseProxy
+class ProtectorMysqliDatabase extends XoopsMysqliDatabaseProxy
 {
 
 var $doubtful_requests = array() ;
