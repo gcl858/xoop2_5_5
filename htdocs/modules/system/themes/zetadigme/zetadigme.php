@@ -92,7 +92,7 @@ window.onload= function(){
 	//start system overview
         $tpl->assign('lang_xoops_version', XOOPS_VERSION);
         $tpl->assign('lang_php_vesion', PHP_VERSION);
-        $tpl->assign('lang_mysql_version', mysql_get_server_info());
+        $tpl->assign('lang_mysql_version', mysqli_get_server_info($GLOBALS['xoopsDB']->conn));
         $tpl->assign('lang_server_api', PHP_SAPI);
         $tpl->assign('lang_os_name', PHP_OS);
         $tpl->assign('safe_mode', ini_get( 'safe_mode' ) ? 'On' : 'Off');
