@@ -73,7 +73,7 @@ if (!empty($_POST)) {
         }
     }
     if ($op == 'post' && !is_object($xoopsUser)) {
-        xoops_load('XoopsCaptcha');
+        xoops_load('xoopscaptcha');
         $xoopsCaptcha = XoopsCaptcha::getInstance();
         if (! $xoopsCaptcha->verify()) {
             $captcha_message = $xoopsCaptcha->getMessage();
@@ -103,7 +103,7 @@ switch ($op) {
         break;
 
     case "preview":
-        $myts =& MyTextSanitizer::getInstance();
+        $myts = MyTextSanitizer::getInstance();
         $doimage = 1;
         $com_title = $myts->htmlSpecialChars($myts->stripSlashesGPC($_POST['com_title']));
         if ($dohtml != 0) {
@@ -287,7 +287,7 @@ switch ($op) {
                 if (!$comment_handler->updateByField($comment, 'com_rootid', $com_rootid)) {
                     $comment_handler->delete($comment);
                     include $GLOBALS['xoops']->path('header.php');
-                    xoops_error();
+                    xoops_error("An error occurred while updating comment root ID.");
                     include $GLOBALS['xoops']->path('footer.php');
                 }
             }
@@ -329,9 +329,12 @@ switch ($op) {
                     }
                 }
                 if (!$skip) {
-                    $criteria = new CriteriaCompo(new Criteria('com_modid', $com_modid));
-                    $criteria->add(new Criteria('com_itemid', $com_itemid));
-                    $criteria->add(new Criteria('com_status', XOOPS_COMMENT_ACTIVE));
+                    $criterion1 = new Criteria('com_modid', $com_modid);
+                    $criteria = new CriteriaCompo($criterion1);
+                    $criterion2 = new Criteria('com_itemid', $com_itemid);
+                    $criteria->add($criterion2);
+                    $criterion3 = new Criteria('com_status', XOOPS_COMMENT_ACTIVE);
+                    $criteria->add($criterion3);
                     $comment_count = $comment_handler->getCount($criteria);
                     $func = $comment_config['callback']['update'];
                     call_user_func_array($func, array(

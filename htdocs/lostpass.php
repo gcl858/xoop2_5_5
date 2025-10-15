@@ -31,9 +31,10 @@ if ($email == '') {
     exit();
 }
 
-$myts =& MyTextSanitizer::getInstance();
+$myts = MyTextSanitizer::getInstance();
 $member_handler =& xoops_gethandler('member');
-$getuser =& $member_handler->getUsers(new Criteria('email', $myts->addSlashes($email)));
+$criteria_email = new Criteria('email', $myts->addSlashes($email));
+$getuser =& $member_handler->getUsers($criteria_email);
 
 if (empty($getuser)) {
     $msg = _US_SORRYNOTFOUND;

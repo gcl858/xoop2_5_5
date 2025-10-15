@@ -19,7 +19,7 @@
  */
 defined('XOOPS_ROOT_PATH') or die("XOOPS root path not defined");
 
-xoops_load('XoopsFormElement');
+xoops_load('xoopsFormElement');
 
 /**
  *

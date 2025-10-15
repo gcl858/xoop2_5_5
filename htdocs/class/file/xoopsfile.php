@@ -61,10 +61,10 @@ class XoopsFile
     /**
      * XoopsFile::load()
      *
-     * @param string $name
+     * @param mixed $name
      * @return
      */
-    function load($name = 'file')
+    static function load($name = 'file')
     {
         switch ($name) {
             case 'folder':
@@ -96,13 +96,13 @@ class XoopsFile
     /**
      * XoopsFile::getHandler()
      *
-     * @param string $name
+     * @param mixed $name
      * @param mixed $path
      * @param mixed $create
      * @param mixed $mode
      * @return
      */
-    function getHandler($name = 'file', $path = false, $create = false, $mode = null)
+    static function getHandler($name = 'file', $path = false, $create = false, $mode = null)
     {
         $handler = null;
         XoopsFile::load($name);

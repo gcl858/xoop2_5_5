@@ -19,7 +19,7 @@
  */
 defined('XOOPS_ROOT_PATH') or die('Restricted access');
 
-xoops_load('XoopsFormTextArea');
+xoops_load('xoopsFormTextArea');
 
 /**
  * XOOPS Form Editor
@@ -50,7 +50,7 @@ class XoopsFormEditor extends XoopsFormTextArea
             $configs['name'] = $name;
         }
         $this->XoopsFormTextArea($caption, $name);
-        xoops_load('XoopsEditorHandler');
+        xoops_load('xoopsEditorHandler');
         $editor_handler = XoopsEditorHandler::getInstance();
         $this->editor = $editor_handler->get($configs['editor'], $configs, $nohtml, $OnFailure);
     }

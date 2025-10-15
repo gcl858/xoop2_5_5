@@ -84,7 +84,7 @@ class XoopsLogger
      *
      * @return object XoopsLogger  reference to the only instance
      */
-    function &getInstance()
+    static function &getInstance()
     {
         static $instance;
         if (!isset($instance)) {
@@ -263,6 +263,7 @@ class XoopsLogger
      */
     function dump($mode = '')
     {
+        $ret = '';
         include XOOPS_ROOT_PATH . '/class/logger/render.php';
         return $ret;
     }
@@ -277,7 +278,7 @@ class XoopsLogger
     function dumpTime($name = 'XOOPS', $unset = false)
     {
         if (!$this->activated)
-            return null;
+            return 0.0;
 
         if (!isset($this->logstart[$name])) {
             return 0;
@@ -328,7 +329,7 @@ class XoopsLogger
     /**
      * dnmp Blocks @deprecated
      *
-     * @return dump
+     * @return string
      */
     function dumpBlocks()
     {
@@ -340,7 +341,7 @@ class XoopsLogger
     /**
      * dumpExtra @deprecated
      *
-     * @return dimp
+     * @return string
      */
     function dumpExtra()
     {
@@ -352,7 +353,7 @@ class XoopsLogger
     /**
      * dump Queries @deprecated
      *
-     * @return unknown
+     * @return string
      */
     function dumpQueries()
     {

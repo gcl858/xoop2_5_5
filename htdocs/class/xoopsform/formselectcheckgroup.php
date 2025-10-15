@@ -23,7 +23,7 @@
  */
 defined('XOOPS_ROOT_PATH') or die('Restricted access');
 
-xoops_load('XoopsFormCheckBox');
+xoops_load('xoopsFormCheckBox');
 /**
  * Xoops Form Select Check Groups
  *

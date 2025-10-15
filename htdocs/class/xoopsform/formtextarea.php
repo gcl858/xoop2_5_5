@@ -20,7 +20,7 @@
 
 defined('XOOPS_ROOT_PATH') or die('Restricted access');
 
-xoops_load('XoopsFormElement');
+xoops_load('xoopsFormElement');
 
 /**
  * A textarea

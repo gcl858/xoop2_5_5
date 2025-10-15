@@ -19,7 +19,7 @@
 
 defined('XOOPS_ROOT_PATH') or die('Restricted access');
 
-xoops_load('XoopsForm');
+xoops_load('xoopsForm');
 
 /**
  * Form that will output as a theme-enabled HTML table

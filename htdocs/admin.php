@@ -81,13 +81,13 @@ if (!empty($_GET['xoopsorgnews'])) {
         $rssurl = array_unique(array_merge($rssurl, $URLs));
     }
     $rssfile = 'adminnews-' . xoops_getConfigOption('language');
-    xoops_load('XoopsCache');
+    xoops_load('xoopscache');
     $items = array();
     if (!$items = XoopsCache::read($rssfile)) {
         require_once $GLOBALS['xoops']->path('class/snoopy.php');
         include_once $GLOBALS['xoops']->path('class/xml/rss/xmlrss2parser.php');
 
-        xoops_load('XoopsLocal');
+        xoops_load('xoopslocal');
         $snoopy = new Snoopy();
         $cnt = 0;
         foreach ($rssurl as $url) {

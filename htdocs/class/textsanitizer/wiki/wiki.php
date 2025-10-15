@@ -65,7 +65,7 @@ EOH;
             return $text;
         }
         $charset = !empty($config['charset']) ? $config['charset'] : "UTF-8";
-        xoops_load('XoopsLocal');
+        xoops_load('xoopsLocal');
         $ret = "<a href='" . sprintf($config['link'], urlencode(XoopsLocal::convert_encoding($text, $charset))) . "' rel='external' title=''>{$text}</a>";
         return $ret;
     }

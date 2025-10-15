@@ -49,7 +49,7 @@ class SystemBannerclient extends XoopsObject
 
         $title = $this->isNew() ? sprintf( _AM_SYSTEM_BANNERS_ADDNWCLI ) : sprintf( _AM_SYSTEM_BANNERS_EDITADVCLI );
 
-        xoops_load('XoopsFormLoader');
+        xoops_load('xoopsformloader');
 
         $form = new XoopsThemeForm($title, 'form', $action, 'post', true);
 

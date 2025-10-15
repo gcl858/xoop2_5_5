@@ -106,7 +106,7 @@ switch ($op) {
 						$protected = array('', 'class', 'Frameworks', 'images', 'include', 'kernel', 'language', 'modules', 'themes', 'uploads', 'xoops_lib', 'xoops_data' );
 						foreach ( $protected as $folder ) {
 							$root_path = XOOPS_ROOT_PATH . '/' . $folder.'/';
-							if (eregi($root_path, $path_file)) {
+							if (stripos($path_file, $root_path) !== false) {
 								if ( ($root_path == $path_file) ) {
 									$verif = false;
 								}
@@ -312,15 +312,23 @@ switch ($op) {
         $extension = $file1->ext();
         switch ( $extension ) {
             case 'zip':
-                $archive = new PclZip( $path_file );
-                if ($archive->extract(PCLZIP_OPT_PATH, $path) == 0) {
-                    xoops_error( _AM_SYSTEM_FILEMANAGER_EXTRACT_ERROR );
+                if (class_exists('PclZip') && defined('PCLZIP_OPT_PATH')) {
+                    $archive = new PclZip( $path_file );
+                    if ($archive->extract(PCLZIP_OPT_PATH, $path) == 0) {
+                        xoops_error( _AM_SYSTEM_FILEMANAGER_EXTRACT_ERROR );
+                    } else {
+                        xoops_result( _AM_SYSTEM_FILEMANAGER_EXTRACT_FILE );
+                    }
                 } else {
-                    xoops_result( _AM_SYSTEM_FILEMANAGER_EXTRACT_FILE );
+                    xoops_error( "PclZip class not available for ZIP extraction" );
                 }
                 break;
             case 'tar': case 'gz':
-                PclTarExtract( $path_file, $path );
+                if (function_exists('PclTarExtract')) {
+                    PclTarExtract( $path_file, $path );
+                } else {
+                    xoops_error( "PclTarExtract function not available for TAR extraction" );
+                }
                 break;
         }
 
@@ -356,10 +364,14 @@ switch ($op) {
 
         $form = new XoopsThemeForm( '', 'upload_form', 'admin.php?fct=filemanager', "post", true);
         $form->setExtra('enctype="multipart/form-data"');
-        $form->addElement( new XoopsFormFile( _AM_SYSTEM_FILEMANAGER_UPLOAD_CHOOSE, 'upload_file', 500000), false );
-        $form->addElement( new XoopsFormHidden( 'op', 'filemanager_upload_save') );
-        $form->addElement( new XoopsFormHidden( 'path', $path));
-        $form->addElement( new XoopsFormButton( '', 'up_button', _SUBMIT, 'submit'));
+        $upload_element = new XoopsFormFile( _AM_SYSTEM_FILEMANAGER_UPLOAD_CHOOSE, 'upload_file', 500000);
+        $form->addElement( $upload_element, false );
+        $hidden1_element = new XoopsFormHidden( 'op', 'filemanager_upload_save');
+        $form->addElement( $hidden1_element );
+        $hidden2_element = new XoopsFormHidden( 'path', $path);
+        $form->addElement( $hidden2_element );
+        $button_element = new XoopsFormButton( '', 'up_button', _SUBMIT, 'submit');
+        $form->addElement( $button_element );
         echo $form->render();
     break;
 
@@ -372,10 +384,14 @@ switch ($op) {
 
         $form = new XoopsThemeForm( '', 'newdir_form', 'admin.php?fct=filemanager', "post", true);
         $form->setExtra('enctype="multipart/form-data"');
-        $form->addElement( new XoopsFormText( _AM_SYSTEM_FILEMANAGER_ADDDIR_NAME, 'dir_name', 50, 255), true );
-        $form->addElement( new XoopsFormHidden( 'op', 'filemanager_add_dir_save') );
-        $form->addElement( new XoopsFormHidden( 'path', $path));
-        $form->addElement( new XoopsFormButton( '', 'dir_button', _SUBMIT, 'submit'));
+        $text_element = new XoopsFormText( _AM_SYSTEM_FILEMANAGER_ADDDIR_NAME, 'dir_name', 50, 255);
+        $form->addElement( $text_element, true );
+        $hidden3_element = new XoopsFormHidden( 'op', 'filemanager_add_dir_save');
+        $form->addElement( $hidden3_element );
+        $hidden4_element = new XoopsFormHidden( 'path', $path);
+        $form->addElement( $hidden4_element );
+        $button2_element = new XoopsFormButton( '', 'dir_button', _SUBMIT, 'submit');
+        $form->addElement( $button2_element );
         echo $form->render();
         break;
 		
@@ -423,12 +439,15 @@ switch ($op) {
 
         $form = new XoopsThemeForm( '', 'newdir_form', 'admin.php?fct=filemanager', "post", true);
         $form->setExtra('enctype="multipart/form-data"');
-        $form->addElement( new XoopsFormText( _AM_SYSTEM_FILEMANAGER_ADDFILE, 'file_name', 50, 255), true );
-        $form->addElement( new XoopsFormHidden( 'op', 'filemanager_add_file_save') );
-        $form->addElement( new XoopsFormHidden( 'path', $path));
-        $form->addElement( new XoopsFormButton( '', 'dir_button', _SUBMIT, 'submit'));
+        $text2_element = new XoopsFormText( _AM_SYSTEM_FILEMANAGER_ADDFILE, 'file_name', 50, 255);
+        $form->addElement( $text2_element, true );
+        $hidden5_element = new XoopsFormHidden( 'op', 'filemanager_add_file_save');
+        $form->addElement( $hidden5_element );
+        $hidden6_element = new XoopsFormHidden( 'path', $path);
+        $form->addElement( $hidden6_element );
+        $button3_element = new XoopsFormButton( '', 'dir_button', _SUBMIT, 'submit');
+        $form->addElement( $button3_element );
         echo $form->render();
-        break;
         break;
 
     case 'filemanager_modify_chmod':

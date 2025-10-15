@@ -299,9 +299,9 @@ class XoopsUserUtility
      * @param mixed $linked
      * @return
      */
-    function getUnameFromId($userid, $usereal = false, $linked = false)
+    static function getUnameFromId($userid, $usereal = false, $linked = false)
     {
-        $myts =& MyTextSanitizer::getInstance();
+        $myts = MyTextSanitizer::getInstance();
         $userid = intval($userid);
         $username = '';
         if ($userid > 0) {

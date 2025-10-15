@@ -44,7 +44,7 @@ function mod_createFile($data, $name = null, $dirname = null, $root_path = XOOPS
     $name = ($name) ? $name : strval(time());
     $dirname = ($dirname) ? $dirname : (is_object($xoopsModule) ? $xoopsModule->getVar("dirname", "n") : "system");
 
-    xoops_load('XoopsCache');
+    xoops_load('xoopscache');
     $key = "{$dirname}_{$name}";
     return XoopsCache::write($key, $data);
 }
@@ -68,7 +68,7 @@ function mod_loadFile($name, $dirname = null, $root_path = XOOPS_CACHE_PATH)
 
     if (empty($name)) return $data;
     $dirname = ($dirname) ? $dirname : (is_object($xoopsModule) ? $xoopsModule->getVar("dirname", "n") : "system");
-    xoops_load('XoopsCache');
+    xoops_load('xoopscache');
     $key = "{$dirname}_{$name}";
     return XoopsCache::read($key);
 }

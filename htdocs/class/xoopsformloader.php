@@ -17,38 +17,38 @@
  */
 
 
-xoops_load('XoopsForm');
-xoops_load('XoopsThemeForm');
-xoops_load('XoopsSimpleForm');
-xoops_load('XoopsFormElement');
-xoops_load('XoopsFormElementTray');
-xoops_load('XoopsFormLabel');
-xoops_load('XoopsFormCheckBox');
-xoops_load('XoopsFormPassword');
-xoops_load('XoopsFormButton');
-xoops_load('XoopsFormButtonTray'); // To be cleaned
-xoops_load('XoopsFormHidden');
-xoops_load('XoopsFormFile');
-xoops_load('XoopsFormRadio');
-xoops_load('XoopsFormRadioYN');
-xoops_load('XoopsFormSelect');
-xoops_load('XoopsFormSelectGroup');
-xoops_load('XoopsFormSelectCheckGroup'); // To be cleaned
-xoops_load('XoopsFormSelectUser');
-xoops_load('XoopsFormSelectTheme');
-xoops_load('XoopsFormSelectMatchOption');
-xoops_load('XoopsFormSelectCountry');
-xoops_load('XoopsFormSelectTimeZone');
-xoops_load('XoopsFormSelectLang');
-xoops_load('XoopsFormSelectEditor');
-xoops_load('XoopsFormText');
-xoops_load('XoopsFormTextArea');
-xoops_load('XoopsFormTextDateSelect');
-xoops_load('XoopsFormDhtmlTextArea');
-xoops_load('XoopsFormDateTime');
-xoops_load('XoopsFormHiddenToken');
-xoops_load('XoopsFormColorPicker');
-xoops_load('XoopsFormCaptcha');
-xoops_load('XoopsFormEditor');
+xoops_load('xoopsForm');
+xoops_load('xoopsThemeForm');
+xoops_load('xoopsSimpleForm');
+xoops_load('xoopsFormElement');
+xoops_load('xoopsFormElementTray');
+xoops_load('xoopsFormLabel');
+xoops_load('xoopsFormCheckBox');
+xoops_load('xoopsFormPassword');
+xoops_load('xoopsFormButton');
+xoops_load('xoopsFormButtonTray'); // To be cleaned
+xoops_load('xoopsFormHidden');
+xoops_load('xoopsFormFile');
+xoops_load('xoopsFormRadio');
+xoops_load('xoopsFormRadioYN');
+xoops_load('xoopsFormSelect');
+xoops_load('xoopsFormSelectGroup');
+xoops_load('xoopsFormSelectCheckGroup'); // To be cleaned
+xoops_load('xoopsFormSelectUser');
+xoops_load('xoopsFormSelectTheme');
+xoops_load('xoopsFormSelectMatchOption');
+xoops_load('xoopsFormSelectCountry');
+xoops_load('xoopsFormSelectTimeZone');
+xoops_load('xoopsFormSelectLang');
+xoops_load('xoopsFormSelectEditor');
+xoops_load('xoopsFormText');
+xoops_load('xoopsFormTextArea');
+xoops_load('xoopsFormTextDateSelect');
+xoops_load('xoopsFormDhtmlTextArea');
+xoops_load('xoopsFormDateTime');
+xoops_load('xoopsFormHiddenToken');
+xoops_load('xoopsFormColorPicker');
+xoops_load('xoopsFormCaptcha');
+xoops_load('xoopsFormEditor');
 
 ?>

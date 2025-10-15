@@ -20,7 +20,7 @@
 
 defined('XOOPS_ROOT_PATH') or die('Restricted access');
 
-xoops_load('XoopsFormElementTray');
+xoops_load('xoopsFormElementTray');
 
 /**
  * XoopsFormSelectEditor
@@ -58,7 +58,7 @@ class XoopsFormSelectEditor extends XoopsFormElementTray
      */
     function render()
     {
-        xoops_load('XoopsEditorHandler');
+        xoops_load('xoopsEditorHandler');
         $editor_handler = XoopsEditorHandler::getInstance();
         $editor_handler->allowed_editors = $this->allowed_editors;
         $option_select = new XoopsFormSelect("", $this->name, $this->value);

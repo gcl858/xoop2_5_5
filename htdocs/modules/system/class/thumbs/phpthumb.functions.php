@@ -61,29 +61,23 @@ class phpthumb_functions {
 			case '<':
 			case 'lt':
 				return intval($version1 < $version2);
-				break;
 			case '<=':
 			case 'le':
 				return intval($version1 <= $version2);
-				break;
 			case '>':
 			case 'gt':
 				return intval($version1 > $version2);
-				break;
 			case '>=':
 			case 'ge':
 				return intval($version1 >= $version2);
-				break;
 			case '==':
 			case '=':
 			case 'eq':
 				return intval($version1 == $version2);
-				break;
 			case '!=':
 			case '<>':
 			case 'ne':
 				return intval($version1 != $version2);
-				break;
 		}
 		if ($version1 == $version2) {
 			return 0;
@@ -209,7 +203,7 @@ class phpthumb_functions {
 		$len = strlen($string);
 		$output = '';
 		for ($i = 0; $i < $len; $i++) {
-			$output .= ' 0x'.str_pad(dechex(ord($string{$i})), 2, '0', STR_PAD_LEFT);
+			$output .= ' 0x'.str_pad(dechex(ord($string[$i])), 2, '0', STR_PAD_LEFT);
 		}
 		return $output;
 	}
@@ -364,10 +358,12 @@ class phpthumb_functions {
 			$ImageCreateFunction = 'ImageCreateTrueColor';
 		}
 		if (!function_exists($ImageCreateFunction)) {
-			return phpthumb::ErrorImage($ImageCreateFunction.'() does not exist - no GD support?');
+			trigger_error($ImageCreateFunction.'() does not exist - no GD support?', E_USER_WARNING);
+			return false;
 		}
 		if (($x_size <= 0) || ($y_size <= 0)) {
-			return phpthumb::ErrorImage('Invalid image dimensions: '.$ImageCreateFunction.'('.$x_size.', '.$y_size.')');
+			trigger_error('Invalid image dimensions: '.$ImageCreateFunction.'('.$x_size.', '.$y_size.')', E_USER_WARNING);
+			return false;
 		}
 		return $ImageCreateFunction(round($x_size), round($y_size));
 	}
@@ -668,7 +664,6 @@ class phpthumb_functions {
 								$errstr = $errno.' '.$errstr.($header_newlocation ? '; Location: '.$header_newlocation : '');
 								fclose($fp);
 								return false;
-								break;
 						}
 					}
 				}
@@ -947,7 +942,7 @@ if (!function_exists('gd_info')) {
 				}
 				// to determine capability of GIF creation, try to use ImageCreateFromGIF on a 1px GIF
 				if (function_exists('ImageCreateFromGIF')) {
-					if ($tempfilename = phpthumb::phpThumb_tempnam()) {
+					if ($tempfilename = tempnam(sys_get_temp_dir(), 'phpthumb_test_')) {
 						if ($fp_tempfile = @fopen($tempfilename, 'wb')) {
 							fwrite($fp_tempfile, base64_decode('R0lGODlhAQABAIAAAH//AP///ywAAAAAAQABAAACAUQAOw==')); // very simple 1px GIF file base64-encoded as string
 							fclose($fp_tempfile);
@@ -986,7 +981,7 @@ if (!function_exists('preg_quote')) {
 		if (empty($preg_quote_array)) {
 			$escapeables = '.\\+*?[^]$(){}=!<>|:';
 			for ($i = 0; $i < strlen($escapeables); $i++) {
-				$strtr_preg_quote[$escapeables{$i}] = $delimiter.$escapeables{$i};
+				$strtr_preg_quote[$escapeables[$i]] = $delimiter.$escapeables[$i];
 			}
 		}
 		return strtr($string, $strtr_preg_quote);
@@ -997,7 +992,8 @@ if (!function_exists('file_get_contents')) {
 	// included in PHP v4.3.0+
 	function file_get_contents($filename) {
 		if (preg_match('#^(f|ht)tp\://#i', $filename)) {
-			return SafeURLread($filename, $error);
+			$error = '';
+			return phpthumb_functions::SafeURLread($filename, $error);
 		}
 		if ($fp = @fopen($filename, 'rb')) {
 			$rawData = '';

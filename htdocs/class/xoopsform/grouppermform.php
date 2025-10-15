@@ -19,11 +19,11 @@
 
 defined('XOOPS_ROOT_PATH') or die('Restricted access');
 
-xoops_load('XoopsFormElement');
-xoops_load('XoopsFormHidden');
-xoops_load('XoopsForm');
-xoops_load('XoopsFormElementTray');
-xoops_load('XoopsFormButton');
+xoops_load('xoopsFormElement');
+xoops_load('xoopsFormHidden');
+xoops_load('xoopsForm');
+xoops_load('xoopsFormElementTray');
+xoops_load('xoopsFormButton');
 
 /**
  * Renders a form for setting module specific group permissions

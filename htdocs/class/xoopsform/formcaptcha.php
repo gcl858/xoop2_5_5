@@ -19,7 +19,7 @@
  */
 defined('XOOPS_ROOT_PATH') or die('Restricted access');
 
-xoops_load('XoopsFormElement');
+xoops_load('xoopsFormElement');
 
 /**
  * Usage of XoopsFormCaptcha
@@ -57,7 +57,7 @@ class XoopsFormCaptcha extends XoopsFormElement
      */
     function XoopsFormCaptcha($caption = '', $name = 'xoopscaptcha', $skipmember = true, $configs = array())
     {
-        xoops_load('XoopsCaptcha');
+        xoops_load('xoopsCaptcha');
         $this->captchaHandler = &XoopsCaptcha::getInstance();
         $configs['name'] = $name;
         $configs['skipmember'] = $skipmember;

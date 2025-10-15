@@ -107,7 +107,7 @@ class XoopsCacheFile extends XoopsCacheEngine
         $defaults = array('path' => XOOPS_VAR_PATH . '/caches/xoops_cache' , 'extension' => '.php' , 'prefix' => 'xoops_' , 'lock' => false , 'serialize' => false , 'duration' => 31556926);
         $this->settings = array_merge($defaults, $this->settings);
         if (!isset($this->file)) {
-            XoopsLoad::load('XoopsFile');
+            XoopsLoad::load('xoopsfile');
             $this->file = XoopsFile::getHandler('file', $this->settings['path'] . '/index.html', true);
         }
         $this->settings['path'] = $this->file->folder->cd($this->settings['path']);
@@ -203,11 +203,12 @@ class XoopsCacheFile extends XoopsCacheEngine
         $data = $this->file->read(true);
         if (!empty($data) && !empty($this->settings['serialize'])) {
             $data = stripslashes($data);
-            $data = preg_replace('!s:(\d+):"(.*?)";!se', "'s:'.strlen('$2').':\"$2\";'", $data);
+            $data = preg_replace_callback('!s:(\d+):"(.*?)";!s', function($matches) {
+                return 's:' . strlen($matches[2]) . ':"' . $matches[2] . '";';
+            }, $data);
             $data = unserialize($data);
             if (is_array($data)) {
-                XoopsLoad::load('XoopsUtility');
-                $data = XoopsUtility::recursive('stripslashes', $data);
+                $data = array_map('stripslashes', $data);
             }
         } else if ($data && empty($this->settings['serialize'])) {
             $data = eval($data);

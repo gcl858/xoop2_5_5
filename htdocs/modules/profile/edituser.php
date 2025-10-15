@@ -45,7 +45,7 @@ if ($op == 'save') {
         $edituser->setVar('uname', trim($_POST['uname']) );
         $edituser->setVar('email', trim($_POST['email']) );
     }
-    xoops_load('XoopsUserUtility');
+    xoops_load('xoopsUserUtility');
     $stop = XoopsUserUtility::validate($edituser);
 
     if (!empty($stop)) {

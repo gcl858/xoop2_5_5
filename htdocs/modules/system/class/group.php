@@ -59,8 +59,8 @@ class SystemGroup extends XoopsGroup
             $gperm_handler = &xoops_gethandler('groupperm');
             $r_block_value = $gperm_handler->getItemIds('block_read', $this->getVar('groupid'));
         }
-        xoops_load('XoopsFormLoader');
-        xoops_load('XoopsLists');
+        xoops_load('xoopsformloader');
+        xoops_load('xoopslists');
         include_once XOOPS_ROOT_PATH . '/modules/system/constants.php';
 
         $title = $this->isNew() ? sprintf(_AM_SYSTEM_GROUPS_ADD) : sprintf(_AM_SYSTEM_GROUPS_EDIT);

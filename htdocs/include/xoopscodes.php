@@ -30,7 +30,7 @@ defined('XOOPS_ROOT_PATH') or die('Restricted access');
  */
 function xoopsCodeTarea($textarea_id, $cols = 60, $rows = 15, $suffix = null)
 {
-    xoops_load('XoopsFormDhtmlTextArea');
+    xoops_load('xoopsformdhtmltextarea');
     $hiddenText = isset($suffix) ? 'xoopsHiddenText' . trim($suffix) : 'xoopsHiddenText';
     $content = isset($GLOBALS[$textarea_id]) ? $GLOBALS[$textarea_id] : '';
     $text_editor = new XoopsFormDhtmlTextArea('', $textarea_id, $content, $rows, $cols, $hiddenText);

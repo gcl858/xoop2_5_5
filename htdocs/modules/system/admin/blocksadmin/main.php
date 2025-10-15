@@ -44,8 +44,8 @@ $sel = array(
     'selvis' => -1
 );
 foreach ($sel as $key => $value) {
-    $_{$key} = isset($_COOKIE[$key]) ? intval($_COOKIE[$key]) : $value;
-    ${$key} = system_CleanVars ($method, $key, $_{$key}, 'int');
+    ${'_' . $key} = isset($_COOKIE[$key]) ? intval($_COOKIE[$key]) : $value;
+    ${$key} = system_CleanVars ($method, $key, ${'_' . $key}, 'int');
     setcookie($key, ${$key});
 }
 
@@ -84,7 +84,8 @@ switch ($op) {
         $modules =& $module_handler->getObjects(null, true);
         $criteria = new CriteriaCompo(new Criteria('hasmain', 1));
 
-        $criteria->add(new Criteria('isactive', 1));
+        $isactive_criteria = new Criteria('isactive', 1);
+        $criteria->add($isactive_criteria);
         // Modules for blocks to be visible in
         $display_list = $module_handler->getList($criteria);
         unset($criteria);
@@ -95,9 +96,12 @@ switch ($op) {
         $modules =& $module_handler->getObjects(null, true);
 
         $filterform = new XoopsThemeForm('', 'filterform', 'admin.php', 'get');
-        $filterform->addElement( new XoopsFormHidden('fct', 'blocksadmin'));
-        $filterform->addElement( new XoopsFormHidden('op', 'list'));
-        $filterform->addElement( new XoopsFormHidden('filter', 1));
+        $hidden_fct = new XoopsFormHidden('fct', 'blocksadmin');
+        $filterform->addElement($hidden_fct);
+        $hidden_op = new XoopsFormHidden('op', 'list');
+        $filterform->addElement($hidden_op);
+        $hidden_filter = new XoopsFormHidden('filter', 1);
+        $filterform->addElement($hidden_filter);
         $sel_gen = new XoopsFormSelect( _AM_SYSTEM_BLOCKS_GENERATOR, 'selgen', $selgen);
         $sel_gen->setExtra( "onchange='submit()'" );
         $sel_gen->addOption( -1, _AM_SYSTEM_BLOCKS_TYPES );
@@ -256,7 +260,6 @@ switch ($op) {
         $block->setVars($_POST);
         $content = isset($_POST['content_block']) ? $_POST['content_block'] : '';
         $block->setVar('content', $content);
-        $myts =& MyTextSanitizer::getInstance();
         echo '<div id="xo-preview-dialog" title="'.$block->getVar('title','s').'">'.$block->getContent( 's', $block->getVar('c_type') ).'</div>';
         break;
 
@@ -351,9 +354,12 @@ switch ($op) {
         if (count($removed_groups) > 0) {
             foreach ($removed_groups as $groupid) {
                 $criteria = new CriteriaCompo(new Criteria('gperm_name', 'block_read'));
-                $criteria->add(new Criteria('gperm_groupid', $groupid));
-                $criteria->add(new Criteria('gperm_itemid', $newid));
-                $criteria->add(new Criteria('gperm_modid', 1));
+                $groupid_criteria = new Criteria('gperm_groupid', $groupid);
+                $criteria->add($groupid_criteria);
+                $itemid_criteria = new Criteria('gperm_itemid', $newid);
+                $criteria->add($itemid_criteria);
+                $modid_criteria = new Criteria('gperm_modid', 1);
+                $criteria->add($modid_criteria);
                 $perm = $groupperm_handler->getObjects($criteria);
                 if (isset($perm[0]) && is_object($perm[0])) {
                     $groupperm_handler->delete($perm[0]);
@@ -454,7 +460,8 @@ switch ($op) {
                 // Delete Group permission
                 $groupperm_handler =& xoops_gethandler('groupperm');
                 $criteria = new CriteriaCompo(new Criteria('gperm_name', 'block_read'));
-                $criteria->add(new Criteria('gperm_itemid', $block_id));
+                $itemid_criteria = new Criteria('gperm_itemid', $block_id);
+                $criteria->add($itemid_criteria);
                 $groupperm = $groupperm_handler->getObjects($criteria);
                 foreach ($groupperm as $perm) {
                     $groupperm_handler->delete($perm, true);

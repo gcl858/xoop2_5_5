@@ -20,7 +20,7 @@
 
 defined('XOOPS_ROOT_PATH') or die('Restricted access');
 
-xoops_load('XoopsFormSelect');
+xoops_load('xoopsFormSelect');
 
 /**
  * A selection box with options for matching search terms.

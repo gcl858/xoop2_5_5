@@ -107,7 +107,7 @@ class XoopsCacheModel extends XoopsCacheEngine
      */
     function gc()
     {
-        return $this->model->deleteAll(new Criteria($this->fields[1], time, '<= '));
+        return $this->model->deleteAll(new Criteria($this->fields[1], time(), '<= '));
     }
 
     /**
@@ -128,7 +128,7 @@ class XoopsCacheModel extends XoopsCacheEngine
             return false;
         }
         $cache_obj = $this->model->create();
-        $cache_obj->setVar($this->model::KEYNAME, $key);
+        $cache_obj->setVar(XoopsCacheModelHandler::KEYNAME, $key);
         $cache_obj->setVar($this->fields[0], $data);
         $cache_obj->setVar($this->fields[1], time() + $duration);
         return $this->model->insert($cache_obj);
@@ -143,14 +143,14 @@ class XoopsCacheModel extends XoopsCacheEngine
      */
     function read($key)
     {
-        $criteria = new CriteriaCompo(new Criteria($this->model::KEYNAME, $key));
+        $criteria = new CriteriaCompo(new Criteria(XoopsCacheModelHandler::KEYNAME, $key));
         $criteria->add(new Criteria($this->fields[1], time(), ">"));
         $criteria->setLimit(1);
         $data = $this->model->getAll($criteria);
         if (!$data) {
             return null;
         }
-        return unserialize($data[0]);
+        return unserialize($data[0][$this->fields[0]]);
     }
 
     /**
@@ -216,6 +216,26 @@ class XoopsCacheModelHandler extends XoopsPersistableObjectHandler
     const TABLE = 'cache_model';
     const CLASSNAME = 'XoopsCacheModelObject';
     const KEYNAME = 'key';
+
+    /**
+     * Constructor
+     *
+     * @param XoopsDatabase $db database connection object
+     */
+    function __construct($db)
+    {
+        parent::__construct($db, self::TABLE, self::CLASSNAME, self::KEYNAME);
+    }
+
+    /**
+     * PHP 4 compatible constructor
+     *
+     * @param XoopsDatabase $db database connection object
+     */
+    function XoopsCacheModelHandler($db)
+    {
+        $this->__construct($db);
+    }
 }
 
 ?>

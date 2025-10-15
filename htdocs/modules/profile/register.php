@@ -31,7 +31,7 @@ if (!empty($_GET['op']) && in_array($_GET['op'], array('actv', 'activate'))) {
     exit();
 }
 
-xoops_load('XoopsUserUtility');
+xoops_load('xoopsUserUtility');
 $myts =& MyTextSanitizer::getInstance();
 
 $config_handler =& xoops_gethandler('config');
@@ -177,7 +177,7 @@ if ($current_step == 1) {
     $newuser->setVar('pass', $pass ? md5($pass) : '');
     $stop .= XoopsUserUtility::validate($newuser, $pass, $vpass);
 
-    xoops_load('XoopsCaptcha');
+    xoops_load('xoopsCaptcha');
     $xoopsCaptcha = XoopsCaptcha::getInstance();
     if (!$xoopsCaptcha->verify()) {
         $stop .= $xoopsCaptcha->getMessage();

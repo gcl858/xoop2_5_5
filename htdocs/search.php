@@ -132,9 +132,12 @@ if ($action != 'showallbyuser') {
 switch ($action) {
     case "results":
         $module_handler =& xoops_gethandler('module');
-        $criteria = new CriteriaCompo(new Criteria('hassearch', 1));
-        $criteria->add(new Criteria('isactive', 1));
-        $criteria->add(new Criteria('mid', "(" . implode(',', $available_modules) . ")", 'IN'));
+        $search_criteria1 = new Criteria('hassearch', 1);
+        $criteria = new CriteriaCompo($search_criteria1);
+        $search_criteria2 = new Criteria('isactive', 1);
+        $criteria->add($search_criteria2);
+        $search_criteria3 = new Criteria('mid', "(" . implode(',', $available_modules) . ")", 'IN');
+        $criteria->add($search_criteria3);
         $modules = $module_handler->getObjects($criteria, true);
         $mids = isset($_REQUEST['mids']) ? $_REQUEST['mids'] : array();
         if (empty($mids) || ! is_array($mids)) {
@@ -183,7 +186,8 @@ switch ($action) {
                         echo "<span class='x-small'>";
                         $results[$i]['uid'] = @intval($results[$i]['uid']);
                         if (!empty($results[$i]['uid'])) {
-                            $uname = XoopsUser::getUnameFromId($results[$i]['uid']);
+                            xoops_load('XoopsUserUtility');
+                            $uname = XoopsUserUtility::getUnameFromId($results[$i]['uid']);
                             echo "&nbsp;&nbsp;<a href='" . XOOPS_URL . "/userinfo.php?uid=" . $results[$i]['uid'] . "' title=''>" . $uname . "</a>\n";
                         }
                         echo !empty($results[$i]['time']) ? " (" . formatTimestamp(intval($results[$i]['time'])) . ")" : "";
@@ -247,7 +251,8 @@ switch ($action) {
                 echo "<span class='x-small'>";
                 $results[$i]['uid'] = @intval($results[$i]['uid']);
                 if (!empty($results[$i]['uid'])) {
-                    $uname = XoopsUser::getUnameFromId($results[$i]['uid']);
+                    xoops_load('XoopsUserUtility');
+                    $uname = XoopsUserUtility::getUnameFromId($results[$i]['uid']);
                     echo "&nbsp;&nbsp;<a href='" . XOOPS_URL . "/userinfo.php?uid=" . $results[$i]['uid'] . "'>" . $uname . "</a>\n";
                 }
                 echo !empty($results[$i]['time']) ? " (" . formatTimestamp(intval($results[$i]['time'])) . ")" : "";

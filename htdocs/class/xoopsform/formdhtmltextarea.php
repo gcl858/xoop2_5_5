@@ -25,7 +25,7 @@ defined('XOOPS_ROOT_PATH') or die('Restricted access');
 /**
  * base class
  */
-xoops_load('XoopsFormTextArea');
+xoops_load('xoopsFormTextArea');
 
 /**
  *  A textarea with xoopsish formatting and smilie buttons
@@ -108,7 +108,7 @@ class XoopsFormDhtmlTextArea extends XoopsFormTextArea
             }
 
             if (count($this->htmlEditor) == 1) {
-                xoops_load('XoopsEditorHandler');
+                xoops_load('xoopsEditorHandler');
                 $editor_handler = &XoopsEditorHandler::getInstance();
                 $this->htmlEditor = $editor_handler->get($this->htmlEditor[0], $options);
                 if ($inLoop > 1) {

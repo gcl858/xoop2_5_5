@@ -91,8 +91,10 @@ class XoopsCacheMemcache extends XoopsCacheEngine
             'compress' => false);
         $this->settings = array_merge($defaults, $this->settings);
 
-        if (!$this->settings['compress']) {
-            $this->settings['compress'] = MEMCACHE_COMPRESSED;
+        if ($this->settings['compress']) {
+            $this->settings['compress'] = defined('MEMCACHE_COMPRESSED') ? MEMCACHE_COMPRESSED : 2;
+        } else {
+            $this->settings['compress'] = 0;
         }
         if (!is_array($this->settings['servers'])) {
             $this->settings['servers'] = array(
@@ -151,10 +153,11 @@ class XoopsCacheMemcache extends XoopsCacheEngine
     /**
      * Delete all keys from the cache
      *
+     * @param boolean $check if true will check expiration, otherwise delete all
      * @return boolean True if the cache was succesfully cleared, false otherwise
      * @access public
      */
-    function clear()
+    function clear($check = false)
     {
         return $this->memcache->flush();
     }

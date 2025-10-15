@@ -45,7 +45,7 @@ class XoopsCaptchaImageHandler
 
     function __construct()
     {
-        xoops_load('XoopsCaptcha');
+        xoops_load('xoopsCaptcha');
         $this->captcha_handler = XoopsCaptcha::getInstance();
         $this->config = $this->captcha_handler->loadConfig("image");
     }
@@ -107,7 +107,7 @@ class XoopsCaptchaImageHandler
     function getList($name, $extension = "")
     {
         $items = array();
-        xoops_load('XoopsCache');
+        xoops_load('xoopsCache');
         if ($items = XoopsCache::read("captcha_captcha_{$name}")) {
             return $items;
         }

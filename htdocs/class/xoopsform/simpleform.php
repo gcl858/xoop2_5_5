@@ -23,7 +23,7 @@ defined('XOOPS_ROOT_PATH') or die('Restricted access');
 /**
  * base class
  */
-xoops_load('XoopsForm');
+xoops_load('xoopsForm');
 
 /**
  * Form that will output as a simple HTML form with minimum formatting

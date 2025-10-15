@@ -102,7 +102,7 @@ class XoopsFileHandler
      */
     function __construct($path, $create = false, $mode = 0755)
     {
-        XoopsLoad::load('XoopsFile');
+        XoopsLoad::load('xoopsfile');
         $this->folder = XoopsFile::getHandler('folder', dirname($path), $create, $mode);
         if (!is_dir($path)) {
             $this->name = basename($path);

@@ -66,7 +66,7 @@ class XoopsCache
      * @return object
      * @access public
      */
-    function &getInstance()
+    static function &getInstance()
     {
         static $instance;
         if (!isset($instance)) {
@@ -135,7 +135,7 @@ class XoopsCache
         if ($name !== $_this->name) {
             if ($_this->engine($engine, $settings) === false) {
                 trigger_error("Cache Engine {$engine} is not set", E_USER_WARNING);
-                return false;
+                return array();
             }
             $_this->name = $name;
             $_this->configs[$name] = $_this->settings($engine);
@@ -219,7 +219,7 @@ class XoopsCache
         $config = $_this->config($config);
 
         if (!is_array($config)) {
-            return null;
+            return false;
         }
         extract($config);
 
@@ -257,7 +257,7 @@ class XoopsCache
      * @return mixed The cached data, or false if the data doesn't exist, has expired, or if there was an error fetching it
      * @access public
      */
-    function read($key, $config = null)
+    static function read($key, $config = null)
     {
         $key = substr(md5(XOOPS_URL), 0, 8) . '_' . $key;
         $_this =& XoopsCache::getInstance();
@@ -396,7 +396,7 @@ class XoopsCacheEngine
     /**
      * settings of current engine instance
      *
-     * @var int
+     * @var array
      * @access public
      */
     var $settings;
@@ -440,7 +440,8 @@ class XoopsCacheEngine
      */
     function write($key, &$value, $duration)
     {
-        trigger_error(sprintf(__('Method write() not implemented in %s', true), get_class($this)), E_USER_ERROR);
+        trigger_error(sprintf('Method write() not implemented in %s', get_class($this)), E_USER_ERROR);
+        return false;
     }
 
     /**
@@ -452,7 +453,8 @@ class XoopsCacheEngine
      */
     function read($key)
     {
-        trigger_error(sprintf(__('Method read() not implemented in %s', true), get_class($this)), E_USER_ERROR);
+        trigger_error(sprintf('Method read() not implemented in %s', get_class($this)), E_USER_ERROR);
+        return false;
     }
 
     /**
@@ -464,6 +466,7 @@ class XoopsCacheEngine
      */
     function delete($key)
     {
+        return false;
     }
 
     /**
@@ -475,6 +478,7 @@ class XoopsCacheEngine
      */
     function clear($check)
     {
+        return false;
     }
 
     /**
@@ -485,7 +489,10 @@ class XoopsCacheEngine
      */
     function settings()
     {
-        return $this->settings;
+        if (is_array($this->settings)) {
+            return $this->settings;
+        }
+        return array();
     }
 }
 

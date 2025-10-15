@@ -183,7 +183,8 @@ if ($action == "showpopups") {
             $onlines = $online_handler->getAll($criteria);
             $count = count($onlines);
             $module_handler =& xoops_gethandler('module');
-            $modules = $module_handler->getList(new Criteria('isactive', 1));
+            $criteria_module = new Criteria('isactive', 1);
+            $modules = $module_handler->getList($criteria_module);
             for ($i = 0; $i < $count; $i++) {
                 if ($onlines[$i]['online_uid'] == 0) {
                     $onlineUsers[$i]['user'] = '';

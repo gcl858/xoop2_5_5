@@ -28,8 +28,9 @@ function install_acceptUser($hash = '')
     if ($hash_login != md5($user->getVar('pass') . XOOPS_DB_NAME . XOOPS_DB_PASS . XOOPS_DB_PREFIX)) {
         return false;
     }
-    $myts =& MyTextsanitizer::getInstance();
+    $myts = new MyTextSanitizer();
     if (is_object($GLOBALS['xoops']) && method_exists($GLOBALS['xoops'], 'acceptUser')) {
+        $msg = '';
         $res = $GLOBALS['xoops']->acceptUser($uname, true, $msg);
         return $res;
     }
@@ -51,7 +52,7 @@ function install_finalize($installer_modified)
 
 function xoFormField( $name, $value, $label, $help = '' )
 {
-    $myts =& MyTextSanitizer::getInstance();
+    $myts = new MyTextSanitizer();
     $label = $myts->htmlspecialchars($label, ENT_QUOTES, _INSTALL_CHARSET, false);
     $name = $myts->htmlspecialchars($name, ENT_QUOTES, _INSTALL_CHARSET, false);
     $value = $myts->htmlspecialchars($value, ENT_QUOTES);
@@ -68,7 +69,7 @@ function xoFormField( $name, $value, $label, $help = '' )
 
 function xoPassField($name, $value, $label, $help = '')
 {
-    $myts =& MyTextSanitizer::getInstance();
+    $myts = new MyTextSanitizer();
     $label = $myts->htmlspecialchars( $label, ENT_QUOTES, _INSTALL_CHARSET, false);
     $name = $myts->htmlspecialchars( $name, ENT_QUOTES, _INSTALL_CHARSET, false);
     $value = $myts->htmlspecialchars( $value, ENT_QUOTES );
@@ -92,7 +93,7 @@ function getDirList($dirname)
     $dirlist = array();
     if ($handle = opendir($dirname)) {
         while ($file = readdir($handle)) {
-            if ($file{0} != '.' && is_dir($dirname . $file)) {
+            if ($file[0] != '.' && is_dir($dirname . $file)) {
                 $dirlist[] = $file;
             }
         }
@@ -259,7 +260,7 @@ function xoFormFieldCollation($name, $value, $label, $help, $link, $charset)
         return "";
     }
 
-    $myts =& MyTextSanitizer::getInstance();
+    $myts = new MyTextSanitizer();
     $label = $myts->htmlspecialchars($label, ENT_QUOTES, _INSTALL_CHARSET, false);
     $name = $myts->htmlspecialchars($name, ENT_QUOTES, _INSTALL_CHARSET, false);
     $value = $myts->htmlspecialchars($value, ENT_QUOTES);
@@ -315,7 +316,7 @@ function xoFormFieldCharset( $name, $value, $label, $help = '', $link )
     ksort($chars);
     $charsets = array_merge($charsets, $chars);
 
-    $myts =& MyTextSanitizer::getInstance();
+    $myts = new MyTextSanitizer();
     $label = $myts->htmlspecialchars($label, ENT_QUOTES, _INSTALL_CHARSET, false);
     $name = $myts->htmlspecialchars($name, ENT_QUOTES, _INSTALL_CHARSET, false);
     $value = $myts->htmlspecialchars($value, ENT_QUOTES);

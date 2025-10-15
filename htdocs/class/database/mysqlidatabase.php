@@ -38,7 +38,7 @@ class XoopsMysqliDatabase extends XoopsDatabase
     /**
      * Database connection
      *
-     * @var resource
+     * @var mysqli
      */
     public $conn;
 
@@ -100,8 +100,8 @@ class XoopsMysqliDatabase extends XoopsDatabase
     /**
      * Get a result row as an enumerated array
      *
-     * @param resource $result
-     * @return array
+     * @param mysqli_result $result
+     * @return array|null
      */
     function fetchRow($result)
     {
@@ -111,7 +111,8 @@ class XoopsMysqliDatabase extends XoopsDatabase
     /**
      * Fetch a result row as an associative array
      *
-     * @return array
+     * @param mysqli_result $result
+     * @return array|null
      */
     function fetchArray($result)
     {
@@ -121,7 +122,8 @@ class XoopsMysqliDatabase extends XoopsDatabase
     /**
      * Fetch a result row as an associative array
      *
-     * @return array
+     * @param mysqli_result $result
+     * @return array|null
      */
     function fetchBoth($result)
     {
@@ -131,8 +133,8 @@ class XoopsMysqliDatabase extends XoopsDatabase
     /**
      * XoopsMySQLDatabase::fetchObjected()
      *
-     * @param mixed $result
-     * @return
+     * @param mysqli_result $result
+     * @return object|null
      */
     function fetchObject($result)
     {
@@ -152,7 +154,7 @@ class XoopsMysqliDatabase extends XoopsDatabase
     /**
      * Get number of rows in result
      *
-     * @param resource $ query result
+     * @param mysqli_result $result query result
      * @return int
      */
     function getRowsNum($result)
@@ -181,18 +183,19 @@ class XoopsMysqliDatabase extends XoopsDatabase
     /**
      * will free all memory associated with the result identifier result.
      *
-     * @param resource $ query result
+     * @param mysqli_result $result query result
      * @return bool TRUE on success or FALSE on failure.
      */
     function freeRecordSet($result)
     {
-        return mysqli_free_result($result);
+        mysqli_free_result($result);
+        return true;
     }
 
     /**
      * Returns the text of the error message from previous MySQL operation
      *
-     * @return bool Returns the error text from the last MySQL function, or '' (the empty string) if no error occurred.
+     * @return string Returns the error text from the last MySQL function, or '' (the empty string) if no error occurred.
      */
     function error()
     {
@@ -234,7 +237,7 @@ class XoopsMysqliDatabase extends XoopsDatabase
      * @param string $sql a valid MySQL query
      * @param int $limit number of records to return
      * @param int $start offset of first record to return
-     * @return resource query result or FALSE if successful
+     * @return mysqli_result|bool query result or FALSE if unsuccessful
      * or TRUE if successful and no result
      */
     function queryF($sql, $limit = 0, $start = 0)
@@ -284,11 +287,12 @@ class XoopsMysqliDatabase extends XoopsDatabase
         if (false !== ($fp = fopen($file, 'r'))) {
             include_once XOOPS_ROOT_PATH . '/class/database/sqlutility.php';
             $sql_queries = trim(fread($fp, filesize($file)));
-            SqlUtility::splitMySqlFile($pieces, $sql_queries);
+            $sqlUtility = new SqlUtility();
+            $sqlUtility->splitMySqlFile($pieces, $sql_queries);
             foreach ($pieces as $query) {
                 // [0] contains the prefixed query
                 // [4] contains unprefixed table name
-                $prefixed_query = SqlUtility::prefixQuery(trim($query), $this->prefix());
+                $prefixed_query = $sqlUtility->prefixQuery(trim($query), $this->prefix());
                 if ($prefixed_query != false) {
                     $this->query($prefixed_query[0]);
                 }
@@ -301,8 +305,8 @@ class XoopsMysqliDatabase extends XoopsDatabase
     /**
      * Get field name
      *
-     * @param resource $result query result
-     * @param int $ numerical field index
+     * @param mysqli_result $result query result
+     * @param int $offset numerical field index
      * @return string
      */
     function getFieldName($result, $offset)
@@ -314,7 +318,7 @@ class XoopsMysqliDatabase extends XoopsDatabase
     /**
      * Get field type
      *
-     * @param resource $result query result
+     * @param mysqli_result $result query result
      * @param int $offset numerical field index
      * @return string
      */
@@ -327,7 +331,7 @@ class XoopsMysqliDatabase extends XoopsDatabase
     /**
      * Get number of fields in result
      *
-     * @param resource $result query result
+     * @param mysqli_result $result query result
      * @return int
      */
     function getFieldsNum($result)
@@ -352,7 +356,7 @@ class XoopsMysqliDatabaseSafe extends XoopsMysqliDatabase
      * @param string $sql a valid MySQL query
      * @param int $limit number of records to return
      * @param int $start offset of first record to return
-     * @return resource query result or FALSE if successful
+     * @return mysqli_result|bool query result or FALSE if unsuccessful
      * or TRUE if successful and no result
      */
     function query($sql, $limit = 0, $start = 0)
@@ -382,7 +386,7 @@ class XoopsMysqliDatabaseProxy extends XoopsMysqliDatabase
      * @param string $sql a valid MySQL query
      * @param int $limit number of records to return
      * @param int $start offset of first record to return
-     * @return resource query result or FALSE if unsuccessful
+     * @return mysqli_result|bool query result or FALSE if unsuccessful
      */
     function query($sql, $limit = 0, $start = 0)
     {

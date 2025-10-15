@@ -85,7 +85,7 @@ class XoopsSystemCpanel
     function getGuis()
     {
         $guis = array();
-        xoops_load('XoopsLists');
+        xoops_load('xoopslists');
         $lists = XoopsLists::getDirListAsArray(XOOPS_ADMINTHEME_PATH);
         foreach (array_keys($lists) as $gui) {
             if (file_exists($file = XOOPS_ADMINTHEME_PATH . '/' . $gui . '/' . $gui . '.php')) {

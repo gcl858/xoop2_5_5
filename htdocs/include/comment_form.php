@@ -23,8 +23,8 @@ if (!defined('XOOPS_ROOT_PATH') || !is_object($xoopsModule)) {
 
 $com_modid = $xoopsModule->getVar('mid');
 
-xoops_load('XoopsLists');
-xoops_load('XoopsFormLoader');
+xoops_load('xoopslists');
+xoops_load('xoopsformloader');
 
 $cform = new XoopsThemeForm(_CM_POSTCOMMENT, "commentform", 'comment_post.php', 'post', true);
 if (isset($xoopsModuleConfig['com_rule'])) {

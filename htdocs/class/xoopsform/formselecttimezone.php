@@ -24,8 +24,8 @@ defined('XOOPS_ROOT_PATH') or die('Restricted access');
  * lists of values
  */
 
-xoops_load('XoopsLists');
-xoops_load('XoopsFormSelect');
+xoops_load('xoopsLists');
+xoops_load('xoopsFormSelect');
 
 /**
  * A select box with timezones

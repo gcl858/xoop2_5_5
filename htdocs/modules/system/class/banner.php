@@ -51,7 +51,7 @@ class SystemBanner extends XoopsObject
 
         $title = $this->isNew() ? sprintf( _AM_SYSTEM_BANNERS_ADDNWBNR ) : sprintf( _AM_SYSTEM_BANNERS_EDITBNR );
 
-        xoops_load('XoopsFormLoader');
+        xoops_load('xoopsformloader');
 
         $form = new XoopsThemeForm($title, 'form', $action, 'post', true);
 

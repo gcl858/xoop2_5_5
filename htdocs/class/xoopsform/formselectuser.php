@@ -21,8 +21,8 @@
  */
 defined('XOOPS_ROOT_PATH') or die('Restricted access');
 
-xoops_load('XoopsFormElementTray');
-xoops_load('XoopsFormSelect');
+xoops_load('xoopsFormElementTray');
+xoops_load('xoopsFormSelect');
 
 /**
  * User Select field

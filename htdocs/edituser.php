@@ -251,12 +251,18 @@ if ($op == 'avatarform') {
         include_once $GLOBALS['xoops']->path('class/xoopsformloader.php');
         $form = new XoopsThemeForm(_US_UPLOADMYAVATAR, 'uploadavatar', 'edituser.php', 'post', true);
         $form->setExtra('enctype="multipart/form-data"');
-        $form->addElement(new XoopsFormLabel(_US_MAXPIXEL, $xoopsConfigUser['avatar_width'] . ' x ' . $xoopsConfigUser['avatar_height']));
-        $form->addElement(new XoopsFormLabel(_US_MAXIMGSZ, $xoopsConfigUser['avatar_maxsize']));
-        $form->addElement(new XoopsFormFile(_US_SELFILE, 'avatarfile', $xoopsConfigUser['avatar_maxsize']), true);
-        $form->addElement(new XoopsFormHidden('op', 'avatarupload'));
-        $form->addElement(new XoopsFormHidden('uid', $xoopsUser->getVar('uid')));
-        $form->addElement(new XoopsFormButton('', 'submit', _SUBMIT, 'submit'));
+        $max_pixel_element = new XoopsFormLabel(_US_MAXPIXEL, $xoopsConfigUser['avatar_width'] . ' x ' . $xoopsConfigUser['avatar_height']);
+        $form->addElement($max_pixel_element);
+        $max_size_element = new XoopsFormLabel(_US_MAXIMGSZ, $xoopsConfigUser['avatar_maxsize']);
+        $form->addElement($max_size_element);
+        $file_element = new XoopsFormFile(_US_SELFILE, 'avatarfile', $xoopsConfigUser['avatar_maxsize']);
+        $form->addElement($file_element, true);
+        $op_hidden_element = new XoopsFormHidden('op', 'avatarupload');
+        $form->addElement($op_hidden_element);
+        $uid_hidden_element = new XoopsFormHidden('uid', $xoopsUser->getVar('uid'));
+        $form->addElement($uid_hidden_element);
+        $submit_element = new XoopsFormButton('', 'submit', _SUBMIT, 'submit');
+        $form->addElement($submit_element);
         $form->display();
     }
     $avatar_handler =& xoops_gethandler('avatar');
@@ -269,12 +275,17 @@ if ($op == 'avatarform') {
     $avatar_select->setExtra("onchange='showImgSelected(\"avatar\", \"user_avatar\", \"uploads\", \"\", \"" . XOOPS_URL . "\")'");
     $avatar_tray = new XoopsFormElementTray(_US_AVATAR, '&nbsp;');
     $avatar_tray->addElement($avatar_select);
-    $avatar_tray->addElement(new XoopsFormLabel('', "<a href=\"javascript:openWithSelfMain('" . XOOPS_URL . "/misc.php?action=showpopups&amp;type=avatars','avatars',600,400);\">" . _LIST . "</a><br />"));
-    $avatar_tray->addElement(new XoopsFormLabel('', "<br /><img src='" . XOOPS_UPLOAD_URL . "/" . $avatar_selected . "' name='avatar' id='avatar' alt='' />"));
+    $avatar_link_element = new XoopsFormLabel('', "<a href=\"javascript:openWithSelfMain('" . XOOPS_URL . "/misc.php?action=showpopups&amp;type=avatars','avatars',600,400);\">" . _LIST . "</a><br />");
+    $avatar_tray->addElement($avatar_link_element);
+    $avatar_img_element = new XoopsFormLabel('', "<br /><img src='" . XOOPS_UPLOAD_URL . "/" . $avatar_selected . "' name='avatar' id='avatar' alt='' />");
+    $avatar_tray->addElement($avatar_img_element);
     $form2->addElement($avatar_tray);
-    $form2->addElement(new XoopsFormHidden('uid', $xoopsUser->getVar('uid')));
-    $form2->addElement(new XoopsFormHidden('op', 'avatarchoose'));
-    $form2->addElement(new XoopsFormButton('', 'submit2', _SUBMIT, 'submit'));
+    $uid_hidden2_element = new XoopsFormHidden('uid', $xoopsUser->getVar('uid'));
+    $form2->addElement($uid_hidden2_element);
+    $op_hidden2_element = new XoopsFormHidden('op', 'avatarchoose');
+    $form2->addElement($op_hidden2_element);
+    $submit2_element = new XoopsFormButton('', 'submit2', _SUBMIT, 'submit');
+    $form2->addElement($submit2_element);
     $form2->display();
     include $GLOBALS['xoops']->path('footer.php');
 }
@@ -319,7 +330,8 @@ if ($op == 'avatarupload') {
                 } else {
                     $oldavatar = $xoopsUser->getVar('user_avatar');
                     if (! empty($oldavatar) && false !== strpos(strtolower($oldavatar), "cavt")) {
-                        $avatars = $avt_handler->getObjects(new Criteria('avatar_file', $oldavatar));
+                        $oldavatar_criteria = new Criteria('avatar_file', $oldavatar);
+                        $avatars = $avt_handler->getObjects($oldavatar_criteria);
                         if (! empty($avatars) && count($avatars) == 1 && is_object($avatars[0])) {
                             $avt_handler->delete($avatars[0]);
                             $oldavatar_path = realpath(XOOPS_UPLOAD_PATH . '/' . $oldavatar);
@@ -356,8 +368,10 @@ if ($op == 'avatarchoose') {
     $avt_handler =& xoops_gethandler('avatar');
     if (!empty($_POST['user_avatar'])) {
         $user_avatar = $myts->addSlashes(trim($_POST['user_avatar']));
-        $criteria_avatar = new CriteriaCompo(new Criteria('avatar_file', $user_avatar));
-        $criteria_avatar->add(new Criteria('avatar_type', "S"));
+        $avatar_criteria1 = new Criteria('avatar_file', $user_avatar);
+        $criteria_avatar = new CriteriaCompo($avatar_criteria1);
+        $avatar_criteria2 = new Criteria('avatar_type', "S");
+        $criteria_avatar->add($avatar_criteria2);
         $avatars = $avt_handler->getObjects($criteria_avatar);
         if (!is_array($avatars) || ! count($avatars)) {
             $user_avatar = 'avatars/blank.gif';
@@ -376,7 +390,8 @@ if ($op == 'avatarchoose') {
             exit();
         }
         if ($oldavatar && preg_match("/^cavt/", strtolower(substr($oldavatar,8)))) {
-            $avatars = $avt_handler->getObjects(new Criteria('avatar_file', $oldavatar));
+            $oldavatar_del_criteria = new Criteria('avatar_file', $oldavatar);
+            $avatars = $avt_handler->getObjects($oldavatar_del_criteria);
             if (!empty($avatars) && count($avatars) == 1 && is_object($avatars[0])) {
                 $avt_handler->delete($avatars[0]);
                 $oldavatar_path = realpath(XOOPS_UPLOAD_PATH . '/' . $oldavatar);
@@ -386,7 +401,8 @@ if ($op == 'avatarchoose') {
             }
         }
         if ($user_avatar != 'avatars/blank.gif') {
-            $avatars = $avt_handler->getObjects(new Criteria('avatar_file', $user_avatar));
+            $user_avatar_criteria = new Criteria('avatar_file', $user_avatar);
+            $avatars = $avt_handler->getObjects($user_avatar_criteria);
             if (is_object($avatars[0])) {
                 $avt_handler->addUser($avatars[0]->getVar('avatar_id'), $xoopsUser->getVar('uid'));
             }

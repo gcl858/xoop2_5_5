@@ -24,7 +24,7 @@ class XoopsLoad
     //static  $loaded;
     //static  $configs;
     
-    function load($name, $type = "core")
+    static function load($name, $type = "core")
     {
         static $loaded;
         static $deprecated;
@@ -83,7 +83,7 @@ class XoopsLoad
      *
      * @access private
      */
-    function loadCore($name)
+    static function loadCore($name)
     {
         static $configs;
 
@@ -113,7 +113,7 @@ class XoopsLoad
      *
      * @access private
      */
-    function loadFramework($name)
+    static function loadFramework($name)
     {
         if (!file_exists($file = XOOPS_ROOT_PATH . '/Frameworks/' . $name . '/xoops' . $name . '.php')) {
             trigger_error('File ' . str_replace(XOOPS_ROOT_PATH, '', $file) . ' not found in file ' . __FILE__ . ' at line ' . __LINE__, E_USER_WARNING);
@@ -130,7 +130,7 @@ class XoopsLoad
      *
      * @access private
      */
-    function loadModule($name, $dirname = null)
+    static function loadModule($name, $dirname = null)
     {
         if (empty($dirname)) {
             return false;
@@ -149,7 +149,7 @@ class XoopsLoad
      *
      * @return
      */
-    function loadCoreConfig()
+    static function loadCoreConfig()
     {
         return $configs = array(
             'xoopsuserutility' => XOOPS_ROOT_PATH . '/class/userutility.php',

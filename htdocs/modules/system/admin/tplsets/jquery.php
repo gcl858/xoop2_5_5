@@ -96,7 +96,7 @@ switch ($op) {
 		}else{
 			$restore = '';
 		}
-		xoops_load('XoopsFile');
+		xoops_load('xoopsfile');
         XoopsFile::load('file');
 
 		$file = XoopsFile::getHandler('file', $path_file);

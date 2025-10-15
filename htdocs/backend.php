@@ -28,7 +28,7 @@ $tpl = new XoopsTpl();
 $tpl->caching = 2;
 $tpl->cache_lifetime = 3600;
 if (!$tpl->is_cached('db:system_rss.html')) {
-    xoops_load('XoopsLocal');
+    xoops_load('xoopslocal');
     $tpl->assign('channel_title', XoopsLocal::convert_encoding(htmlspecialchars($xoopsConfig['sitename'], ENT_QUOTES)));
     $tpl->assign('channel_link', XOOPS_URL . '/');
     $tpl->assign('channel_desc', XoopsLocal::convert_encoding(htmlspecialchars($xoopsConfig['slogan'], ENT_QUOTES)));

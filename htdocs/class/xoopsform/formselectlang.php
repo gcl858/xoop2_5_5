@@ -20,8 +20,8 @@
 
 defined('XOOPS_ROOT_PATH') or die('Restricted access');
 
-xoops_load('XoopsLists');
-xoops_load('XoopsFormSelect');
+xoops_load('xoopsLists');
+xoops_load('xoopsFormSelect');
 
 /**
  * A select field with available languages

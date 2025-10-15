@@ -35,7 +35,7 @@ function mod_loadConfig($dirname = "")
             return null;
         }
     } else {
-        xoops_load('XoopsCache');
+        xoops_load('xoopscache');
         if (!$moduleConfig = XoopsCache::read("{$dirname}_config")) {
             $moduleConfig = mod_fetchConfig($dirname);
             XoopsCache::write("{$dirname}_config", $moduleConfig);
@@ -100,7 +100,7 @@ function mod_clearConfig($dirname = "")
         return false;
     }
 
-    xoops_load('XoopsCache');
+    xoops_load('xoopscache');
     return XoopsCache::delete("{$dirname}_config");
 }
 

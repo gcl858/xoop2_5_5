@@ -164,7 +164,7 @@ function xoops_getActiveModules()
     if (is_array($modules_active)) {
         return $modules_active;
     }
-    xoops_load('XoopsCache');
+    xoops_load('xoopscache');
     if (!$modules_active = XoopsCache::read('system_modules_active')) {
         $modules_active = xoops_setActiveModules();
     }
@@ -183,7 +183,7 @@ function xoops_getActiveModules()
  */
 function xoops_setActiveModules()
 {
-    xoops_load('XoopsCache');
+    xoops_load('xoopscache');
     $module_handler =& xoops_gethandler('module');
     $modules_obj = $module_handler->getObjects(new Criteria('isactive', 1));
     $modules_active = array();
@@ -389,7 +389,7 @@ function xoops_getUserTimestamp($time, $timeoffset = '')
  */
 function formatTimestamp($time, $format = 'l', $timeoffset = '')
 {
-    xoops_load('XoopsLocal');
+    xoops_load('xoopslocal');
     return XoopsLocal::formatTimestamp($time, $format, $timeoffset);
 }
 
@@ -742,7 +742,7 @@ function xoops_getrank($rank_id = 0, $posts = 0)
  */
 function xoops_substr($str, $start, $length, $trimmarker = '...')
 {
-    xoops_load('XoopsLocal');
+    xoops_load('xoopslocal');
     return XoopsLocal::substr($str, $start, $length, $trimmarker);
 }
 // RMV-NOTIFY
@@ -864,7 +864,7 @@ function xoops_groupperm_deletebymoditem($module_id, $perm_name, $item_id = null
  */
 function xoops_utf8_encode(&$text)
 {
-    xoops_load('XoopsLocal');
+    xoops_load('xoopslocal');
     return XoopsLocal::utf8_encode($text);
 }
 
@@ -887,7 +887,7 @@ function xoops_convert_encoding(&$text)
  */
 function xoops_trim($text)
 {
-    xoops_load('XoopsLocal');
+    xoops_load('xoopslocal');
     return XoopsLocal::trim($text);
 }
 

@@ -18,7 +18,7 @@
  */
 defined('XOOPS_ROOT_PATH') or die('Restricted access');
 
-xoops_load('XoopsFormTextArea');
+xoops_load('xoopsFormTextArea');
 
 class XoopsEditor extends XoopsFormTextArea
 {
@@ -159,12 +159,12 @@ class XoopsEditorHandler
             $GLOBALS['xoopsLogger']->addDeprecated(__CLASS__ . '::' . __FUNCTION__ . '() should not be called statically.');
         }
 
-        xoops_load('XoopsCache');
+        xoops_load('xoopsCache');
         $list = XoopsCache::read('editorlist');
         if (empty($list)) {
             $list = array();
             $order = array();
-            xoops_load('XoopsLists');
+            xoops_load('xoopsLists');
             $_list = XoopsLists::getDirListAsArray($this->root_path . '/');
             foreach ($_list as $item) {
                 if (file_exists($file = $this->root_path . '/' . $item . '/language/' . $GLOBALS['xoopsConfig']['language'] . '.php')) {

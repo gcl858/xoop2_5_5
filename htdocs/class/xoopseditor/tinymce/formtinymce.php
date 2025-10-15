@@ -21,7 +21,7 @@
  * @version         $Id: formtinymce.php 8066 2011-11-06 05:09:33Z beckmi $
  */
 
-xoops_load('XoopsEditor');
+xoops_load('xoopsEditor');
 
 class XoopsFormTinymce extends XoopsEditor
 {

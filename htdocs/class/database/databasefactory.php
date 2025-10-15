@@ -43,7 +43,7 @@ class XoopsDatabaseFactory
      * @staticvar object  The only instance of database class
      * @return object Reference to the only instance of database class
      */
-    function &getDatabaseConnection()
+    static function &getDatabaseConnection()
     {
         static $instance;
         if (!isset($instance)) {
@@ -60,7 +60,8 @@ class XoopsDatabaseFactory
                 $xoopsPreload->triggerEvent('core.class.database.databasefactory.connection', array(&$class));
 
                 $instance = new $class();
-                $instance->setLogger(XoopsLogger::getInstance());
+                $xoopsLogger =& XoopsLogger::getInstance();
+                $instance->setLogger($xoopsLogger);
                 $instance->setPrefix(XOOPS_DB_PREFIX);
                 if (!$instance->connect()) {
                     trigger_error('notrace:Unable to connect to database', E_USER_ERROR);

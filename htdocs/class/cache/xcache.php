@@ -165,12 +165,11 @@ class XoopsCacheXcache extends XoopsCacheEngine
                     unset($_SERVER[$key]);
                 }
             } else {
-                $value = env($key);
+                $value = xoops_getenv($key);
                 if (!empty($value)) {
                     $backup[$key] = $value;
                 }
-                $varName = '__' . $key;
-                $_SERVER[$key] = $this->settings[$varName];
+                $_SERVER[$key] = $this->settings[$key];
             }
         }
     }

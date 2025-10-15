@@ -25,8 +25,8 @@
  
 defined('XOOPS_ROOT_PATH') or die('Restricted access');
 
-XoopsLoad::load('XoopsLists');
-XoopsLoad::load('XoopsCache');
+XoopsLoad::load('xoopslists');
+XoopsLoad::load('xoopscache');
 
 /**
  * Class for handling events
@@ -65,7 +65,7 @@ class XoopsPreload
      *
      * @return object
      */
-    function &getInstance()
+    static function &getInstance()
     {
         static $instance = false;
         if (!$instance) {

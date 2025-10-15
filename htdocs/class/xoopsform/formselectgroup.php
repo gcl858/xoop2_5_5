@@ -23,7 +23,7 @@ defined('XOOPS_ROOT_PATH') or die('Restricted access');
 /**
  * Parent
  */
-xoops_load('XoopsFormElement');
+xoops_load('xoopsFormElement');
 
 /**
  * A select field with a choice of available groups

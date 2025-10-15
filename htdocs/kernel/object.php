@@ -98,6 +98,14 @@ class XoopsObject
     var $_errors = array();
 
     /**
+     * plugin path
+     *
+     * @var string
+     * @access public
+     */
+    var $plugin_path;
+
+    /**
      * additional filters registered dynamically by a child class object
      *
      * @access private
@@ -188,9 +196,10 @@ class XoopsObject
             switch ($this->vars[$key]['data_type']) {
                 case XOBJ_DTYPE_UNICODE_ARRAY:
                     if (is_array($value)) {
-                        $this->vars[$key]['value'] =& array_walk($value, "xoops_aw_decode");
+                        array_walk($value, "xoops_aw_decode");
+                        $this->vars[$key]['value'] = $value;
                     } else {
-                        $this->vars[$key]['value'] =& xoops_convert_decode($value);
+                        $this->vars[$key]['value'] = xoops_convert_decode($value);
                     }
                     break;
                 case XOBJ_DTYPE_UNICODE_URL:
@@ -198,27 +207,27 @@ class XoopsObject
                 case XOBJ_DTYPE_UNICODE_OTHER:
                 case XOBJ_DTYPE_UNICODE_TXTBOX:
                 case XOBJ_DTYPE_UNICODE_TXTAREA:
-                    $this->vars[$key]['value'] =& xoops_convert_decode($value);
+                    $this->vars[$key]['value'] = xoops_convert_decode($value);
                     break;
                 case XOBJ_DTYPE_DATE:
                 	if (!is_string($value)&&is_numeric($value)) {
-                		$this->vars[$key]['value'] =& date(_DBDATESTRING, $value);
+                		$this->vars[$key]['value'] = date(_DBDATESTRING, $value);
                 	} else {
-                		$this->vars[$key]['value'] =& date(_DBDATESTRING, strtotime($value)); 
+                		$this->vars[$key]['value'] = date(_DBDATESTRING, strtotime($value)); 
                 	}
                 	break;
                 case XOBJ_DTYPE_TIME:
                 	if (!is_string($value)&&is_numeric($value)) {
-                		$this->vars[$key]['value'] =& date(_DBTIMESTRING, $value);
+                		$this->vars[$key]['value'] = date(_DBTIMESTRING, $value);
                 	} else {
-                		$this->vars[$key]['value'] =& date(_DBTIMESTRING, strtotime($value)); 
+                		$this->vars[$key]['value'] = date(_DBTIMESTRING, strtotime($value)); 
                 	}
                 	break;
 				case XOBJ_DTYPE_TIMESTAMP:
                 	if (!is_string($value)&&is_numeric($value)) {
-                		$this->vars[$key]['value'] =& date(_DBTIMESTAMPSTRING, $value);
+                		$this->vars[$key]['value'] = date(_DBTIMESTAMPSTRING, $value);
                 	} else {
-                		$this->vars[$key]['value'] =& date(_DBTIMESTAMPSTRING, strtotime($value)); 
+                		$this->vars[$key]['value'] = date(_DBTIMESTAMPSTRING, strtotime($value)); 
                 	}
                 	break;                	
                 // YOU SHOULD NOT USE THE ABOVE TYPES, THEY WILL BE REMOVED
@@ -381,13 +390,11 @@ class XoopsObject
                     case 'e':
                     case 'edit':
                         return $ts->htmlSpecialChars($ret);
-                        break 1;
                     case 'p':
                     case 'preview':
                     case 'f':
                     case 'formpreview':
                         return $ts->htmlSpecialChars($ts->stripSlashesGPC($ret));
-                        break 1;
                     case 'n':
                     case 'none':
                     default:
@@ -405,11 +412,9 @@ class XoopsObject
                         $image = (!isset($this->vars['doimage']['value']) || $this->vars['doimage']['value'] == 1) ? 1 : 0;
                         $br = (!isset($this->vars['dobr']['value']) || $this->vars['dobr']['value'] == 1) ? 1 : 0;
                         return $ts->displayTarea($ret, $html, $smiley, $xcode, $image, $br);
-                        break 1;
                     case 'e':
                     case 'edit':
                         return htmlspecialchars($ret, ENT_QUOTES);
-                        break 1;
                     case 'p':
                     case 'preview':
                         $html = !empty($this->vars['dohtml']['value']) ? 1 : 0;
@@ -418,7 +423,6 @@ class XoopsObject
                         $image = (!isset($this->vars['doimage']['value']) || $this->vars['doimage']['value'] == 1) ? 1 : 0;
                         $br = (!isset($this->vars['dobr']['value']) || $this->vars['dobr']['value'] == 1) ? 1 : 0;
                         return $ts->previewTarea($ret, $html, $smiley, $xcode, $image, $br);
-                        break 1;
                     case 'f':
                     case 'formpreview':
                         return htmlspecialchars($ts->stripSlashesGPC($ret), ENT_QUOTES);
@@ -691,8 +695,6 @@ class XoopsObject
                     case XOBJ_DTYPE_SOURCE:
                         if (!$v['not_gpc']) {
                             $cleanv = $ts->stripSlashesGPC($cleanv);
-                        } else {
-                            $cleanv = $cleanv;
                         }
                         break;
                     case XOBJ_DTYPE_INT:
@@ -871,9 +873,10 @@ class XoopsObject
     {
         $this->_loadFilters();
 
-        xoops_load('XoopsCache');
+        xoops_load('xoopscache');
         $class = get_class($this);
-        if (!$modules_active = XoopsCache::read('system_modules_active')) {
+        $cache = new XoopsCache();
+        if (!$modules_active = $cache->read('system_modules_active')) {
             $module_handler =& xoops_gethandler('module');
             $modules_obj = $module_handler->getObjects(new Criteria('isactive', 1));
             $modules_active = array();
@@ -881,7 +884,7 @@ class XoopsObject
                 $modules_active[] = $modules_obj[$key]->getVar('dirname');
             }
             unset($modules_obj);
-            XoopsCache::write('system_modules_active', $modules_active);
+            $cache->write('system_modules_active', $modules_active);
         }
         foreach ($modules_active as $dirname) {
             if (file_exists($file = XOOPS_ROOT_PATH . '/modules/' . $dirname . '/filter/' . $class . '.' . $method . '.php')) {
@@ -1143,8 +1146,9 @@ class XoopsPersistableObjectHandler extends XoopsObjectHandler
         if (is_object($handler)) {
             $this->handler = $handler;
         } else if (is_string($handler)) {
-            xoops_load('XoopsModelFactory');
-            $this->handler = XoopsModelFactory::loadHandler($this, $handler, $args, $path);
+            xoops_load('xoopsmodelfactory');
+            $factory = new XoopsModelFactory();
+            $this->handler = $factory->loadHandler($this, $handler, $args, $path);
         }
         return $this->handler;
     }
@@ -1161,8 +1165,9 @@ class XoopsPersistableObjectHandler extends XoopsObjectHandler
     {
         static $handlers;
         if (!isset($handlers[$name])) {
-            xoops_load('XoopsModelFactory');
-            $handlers[$name] = XoopsModelFactory::loadHandler($this, $name, $args);
+            xoops_load('xoopsmodelfactory');
+            $factory = new XoopsModelFactory();
+            $handlers[$name] = $factory->loadHandler($this, $name, $args);
         } else {
             $handlers[$name]->setHandler($this);
             $handlers[$name]->setVars($args);

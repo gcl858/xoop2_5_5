@@ -27,7 +27,7 @@ $xoopsPreload =& XoopsPreload::getInstance();
 $xoopsPreload->triggerEvent('core.register.start');
 
 xoops_loadLanguage('user');
-xoops_load('XoopsUserUtility');
+xoops_load('xoopsuserutility');
 
 $myts =& MyTextSanitizer::getInstance();
 
@@ -80,7 +80,7 @@ switch ($op) {
             $f_timezone = ($timezone_offset < 0) ? 'GMT ' . $timezone_offset : 'GMT +' . $timezone_offset;
             echo _US_TIMEZONE . ": $f_timezone<br />";
             echo "<form action='register.php' method='post'>";
-            xoops_load('XoopsFormCaptcha');
+            xoops_load('xoopsformcaptcha');
             $cpatcha = new XoopsFormCaptcha();
             echo "<br />" . $cpatcha->getCaption() . ": " . $cpatcha->render();
             echo "<input type='hidden' name='uname' value='" . $myts->htmlSpecialChars($uname) . "' />
@@ -108,7 +108,7 @@ switch ($op) {
         if (!$GLOBALS['xoopsSecurity']->check()) {
             $stop .= implode('<br />', $GLOBALS['xoopsSecurity']->getErrors()) . "<br />";
         }
-        xoops_load('XoopsCaptcha');
+        xoops_load('xoopscaptcha');
         $xoopsCaptcha = XoopsCaptcha::getInstance();
         if (!$xoopsCaptcha->verify()) {
             $stop .= $xoopsCaptcha->getMessage() . "<br />";
