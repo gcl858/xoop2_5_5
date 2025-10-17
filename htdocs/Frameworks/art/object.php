@@ -81,13 +81,9 @@ class ArtObjectHandler extends XoopsPersistableObjectHandler
      *
      * @return     string
      */
-    function mysql_server_version($conn = null)
+    function mysql_server_version()
     {
-        if (!is_null($conn)) {
-            return mysql_get_server_info($conn);
-        } else {
-            return mysql_get_server_info();
-        }
+        return mysqli_get_server_info($this->db->conn);
     }
 
     /**

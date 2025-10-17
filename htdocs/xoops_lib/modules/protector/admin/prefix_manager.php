@@ -78,35 +78,32 @@ if( ! empty( $_POST['copy'] ) && ! empty( $_POST['old_prefix'] ) ) {
 		$table = $row_table['Name'] ;
 		if( substr( $table , 0 , strlen( $prefix ) + 1 ) !== $prefix . '_' ) continue ;
 		$drs = $db->queryF( "SHOW CREATE TABLE `$table`" ) ;
-		$export_string .= "\nDROP TABLE IF EXISTS `$table`;\n".mysql_result($drs,0,1).";\n\n" ;
-		$result = mysql_query( "SELECT * FROM `$table`" ) ;
-		$fields_cnt = mysql_num_fields( $result ) ;
-		$field_flags = array();
-		for ($j = 0; $j < $fields_cnt; $j++) {
-			$field_flags[$j] = mysql_field_flags( $result , $j ) ;
-		}
+		$row_create = $db->fetchRow( $drs );
+		$export_string .= "\nDROP TABLE IF EXISTS `$table`;\n".$row_create[1].";\n\n" ;
+		$result = mysqli_query( $db->conn, "SELECT * FROM `$table`" ) ;
+		$fields_cnt = mysqli_num_fields( $result ) ;
 		$search = array("\x00", "\x0a", "\x0d", "\x1a");
 		$replace = array('\0', '\n', '\r', '\Z');
 		$current_row = 0;
-		while( $row = mysql_fetch_row($result) ) {
+		while( $row = mysqli_fetch_row($result) ) {
 			$current_row ++ ;
 			for( $j = 0 ; $j < $fields_cnt ; $j ++ ) {
-				$fields_meta = mysql_fetch_field( $result , $j ) ;
+				$fields_meta = mysqli_fetch_field_direct( $result , $j ) ;
 				// NULL
 				if (!isset($row[$j]) || is_null($row[$j])) {
 					$values[] = 'NULL';
 				// a number
 				// timestamp is numeric on some MySQL 4.1
-				} elseif ($fields_meta->numeric && $fields_meta->type != 'timestamp') {
+				} elseif (($fields_meta->flags & MYSQLI_NUM_FLAG) && $fields_meta->type != MYSQLI_TYPE_TIMESTAMP) {
 					$values[] = $row[$j];
 				// a binary field
 				// Note: with mysqli, under MySQL 4.1.3, we get the flag
 				// "binary" for those field types (I don't know why)
-				} else if (stristr($field_flags[$j], 'BINARY')
-						&& $fields_meta->type != 'datetime'
-						&& $fields_meta->type != 'date'
-						&& $fields_meta->type != 'time'
-						&& $fields_meta->type != 'timestamp'
+				} else if (($fields_meta->flags & MYSQLI_BINARY_FLAG)
+						&& $fields_meta->type != MYSQLI_TYPE_DATETIME
+						&& $fields_meta->type != MYSQLI_TYPE_DATE
+						&& $fields_meta->type != MYSQLI_TYPE_TIME
+						&& $fields_meta->type != MYSQLI_TYPE_TIMESTAMP
 					   ) {
 					// empty blobs need to be different, but '0' is also empty :-(
 					if (empty($row[$j]) && $row[$j] != '0') {
@@ -124,7 +121,7 @@ if( ! empty( $_POST['copy'] ) && ! empty( $_POST['old_prefix'] ) ) {
 			unset($values);
 
 		} // end while
-		mysql_free_result( $result ) ;
+		mysqli_free_result( $result ) ;
 
 	}
 
