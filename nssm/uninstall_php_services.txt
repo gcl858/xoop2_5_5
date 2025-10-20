@@ -1,0 +1,20 @@
+@echo off
+REM 請以系統管理員身份執行此批次檔
+
+set NSSM_PATH=C:\nssm\win64\nssm.exe
+
+echo Stopping and removing PHP-CGI services...
+
+net stop PHP-CGI-9001
+net stop PHP-CGI-9002
+net stop PHP-CGI-9003
+net stop PHP-CGI-9004
+
+"%NSSM_PATH%" remove PHP-CGI-9001 confirm
+"%NSSM_PATH%" remove PHP-CGI-9002 confirm
+"%NSSM_PATH%" remove PHP-CGI-9003 confirm
+"%NSSM_PATH%" remove PHP-CGI-9004 confirm
+
+echo.
+echo All PHP-CGI services have been removed.
+pause
