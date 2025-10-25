@@ -265,15 +265,13 @@ class ModuleAdmin
             $path = XOOPS_URL . "/Frameworks/moduleclasses/icons/16/";
             $dbarray=$this->_obj->getInfo('min_db');
             if ($dbarray[XOOPS_DB_TYPE]) {
+                global $xoopsDB;
                 switch (XOOPS_DB_TYPE) {
                     case "mysql":
-                        $dbCurrentVersion= mysql_get_server_info();
-                        break;
                     case "mysqli":
-                        $dbCurrentVersion = mysqli_get_server_info();
+                        $dbCurrentVersion = mysqli_get_server_info($xoopsDB->conn);
                         break;
                     case "pdo":
-                        global $xoopsDB;
                         $dbCurrentVersion = $xoopsDB->getAttribute(PDO::ATTR_SERVER_VERSION);
                         break;
                     default:
